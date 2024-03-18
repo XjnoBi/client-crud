@@ -1,25 +1,23 @@
-import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { Button, Grid, InputAdornment, OutlinedInput } from '@mui/material';
 import Search from '@mui/icons-material/Search';
 
 import Page from 'components/Page';
 
-import { getClients } from '../../services/api';
-import { StateContext } from '../../store/DataProvider';
+import { useClientFetch } from 'hooks/use-client-query';
+
 import ClientTable from './ClientTable';
 import ClientDialog from './ClientDialog';
 
 function Clients() {
-	const { state, dispatch } = useContext(StateContext);
-	const { clients } = state;
+	const { data: clients, refetch } = useClientFetch();
 
 	const [showDialog, setShowDialog] = useState(false);
-	const [refetchCounter, setRefetchCounter] = useState(0);
 	const [searchValue, setSearchValue] = useState('');
 
-	const handleCloseDialog = (refetch?: boolean) => {
-		if (refetch) {
-			setRefetchCounter(refetchCounter + 1);
+	const handleCloseDialog = (toggleRefetch?: boolean) => {
+		if (toggleRefetch) {
+			refetch();
 		}
 
 		setShowDialog(false);
@@ -31,17 +29,13 @@ function Clients() {
 
 	const filteredClients = useMemo(
 		() =>
-			clients.filter(
+			clients?.filter(
 				(i) =>
 					i.firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
 					i.lastName.toLowerCase().includes(searchValue.toLowerCase())
-			),
+			) || [],
 		[clients, searchValue]
 	);
-
-	useEffect(() => {
-		getClients().then((clients) => dispatch({ type: 'FETCH_ALL_CLIENTS', data: clients }));
-	}, [dispatch, refetchCounter]);
 
 	return (
 		<Page title='Clients'>
@@ -68,7 +62,7 @@ function Clients() {
 					</Grid>
 				</Grid>
 				<Grid item>
-					<ClientTable clients={filteredClients} totalClients={clients.length} />
+					<ClientTable clients={filteredClients} totalClients={clients?.length || 0} />
 				</Grid>
 			</Grid>
 			{showDialog && <ClientDialog open onClose={handleCloseDialog} />}

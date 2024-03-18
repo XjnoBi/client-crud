@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@emotion/react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import './index.css';
 import App from './App';
@@ -9,12 +10,16 @@ import reportWebVitals from './reportWebVitals';
 import theme from './theme';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const queryClient = new QueryClient();
+
 root.render(
 	<React.StrictMode>
 		<ThemeProvider theme={theme}>
-			<BrowserRouter>
-				<App />
-			</BrowserRouter>
+			<QueryClientProvider client={queryClient}>
+				<BrowserRouter>
+					<App />
+				</BrowserRouter>
+			</QueryClientProvider>
 		</ThemeProvider>
 	</React.StrictMode>
 );

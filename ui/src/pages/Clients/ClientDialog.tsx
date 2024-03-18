@@ -16,7 +16,7 @@ import * as Yup from 'yup';
 
 import TextInput from 'components/TextInput';
 
-import { createClient } from '../../services/api';
+import { useClientMutate } from 'hooks/use-client-query';
 
 type Props = {
 	client?: IClient;
@@ -42,6 +42,8 @@ const VALIDATION_SCHEMA = Yup.object({
 const STEPS = ['Personal details', 'Contact details'];
 
 const ClientDialog: React.FC<Props> = ({ client, open = false, onClose }) => {
+	const { create } = useClientMutate();
+
 	const [activeStep, setActiveStep] = React.useState(0);
 	const onSubmit = async (values: IClient) => {
 		if (client?.id) {
@@ -49,7 +51,7 @@ const ClientDialog: React.FC<Props> = ({ client, open = false, onClose }) => {
 			return;
 		}
 
-		await createClient(values);
+		await create.mutateAsync(values);
 		onClose(true);
 	};
 
