@@ -16,14 +16,21 @@ const DEFAULT_PAGINATION = {
 const ClientTable: React.FC<Props> = ({ clients, totalClients }) => {
 	const [pagination, setPagination] = React.useState(DEFAULT_PAGINATION);
 
-	const data = React.useMemo(() => {
+	const paginated = React.useMemo(() => {
 		const { page, rowsPerPage } = pagination;
-		return clients.slice(page, page * rowsPerPage + rowsPerPage);
+		const startIndex = page * rowsPerPage;
+
+		return clients.slice(startIndex, startIndex + rowsPerPage);
 	}, [clients, pagination]);
+
+	const padding = pagination.rowsPerPage > paginated.length ? pagination.rowsPerPage - paginated.length : 0;
 
 	return (
 		<>
-			<Table sx={{ minWidth: 400 }} aria-label='simple table'>
+			<Table
+				sx={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0, minWidth: 400 }}
+				aria-label='simple table'
+			>
 				<TableHead>
 					<TableRow>
 						<TableCell>Name</TableCell>
@@ -32,17 +39,25 @@ const ClientTable: React.FC<Props> = ({ clients, totalClients }) => {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{data.map((client) => (
+					{paginated.map((client) => (
 						<ClientRow key={client.id} client={client} />
 					))}
-					{!clients ||
-						(!clients && (
-							<TableRow sx={{ padding: 3 }}>
-								<TableCell component='th' scope='row'>
-									No clients
-								</TableCell>
-							</TableRow>
-						))}
+					{!paginated.length && (
+						<TableRow sx={{ padding: 3 }}>
+							<TableCell component='th' scope='row'>
+								No clients
+							</TableCell>
+						</TableRow>
+					)}
+					{padding > 0 && (
+						<TableRow
+							sx={{
+								height: padding * 53.1,
+							}}
+						>
+							<TableCell colSpan={3} />
+						</TableRow>
+					)}
 				</TableBody>
 			</Table>
 			<TablePagination
