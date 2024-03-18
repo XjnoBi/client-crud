@@ -5,6 +5,7 @@ import ClientRow from './ClientRow';
 
 type Props = {
 	clients: IClient[];
+	totalClients: number;
 };
 
 const DEFAULT_PAGINATION = {
@@ -12,7 +13,7 @@ const DEFAULT_PAGINATION = {
 	rowsPerPage: 5,
 };
 
-const ClientTable: React.FC<Props> = ({ clients }) => {
+const ClientTable: React.FC<Props> = ({ clients, totalClients }) => {
 	const [pagination, setPagination] = React.useState(DEFAULT_PAGINATION);
 
 	const data = React.useMemo(() => {
@@ -47,7 +48,7 @@ const ClientTable: React.FC<Props> = ({ clients }) => {
 			<TablePagination
 				{...pagination}
 				component='div'
-				count={clients.length}
+				count={totalClients}
 				rowsPerPageOptions={[5, 10, 50]}
 				onPageChange={(_, page) => setPagination({ ...pagination, page })}
 				onRowsPerPageChange={(e) =>

@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useContext, useEffect, useMemo, useState } from 'react';
 import { Button, Grid, InputAdornment, OutlinedInput } from '@mui/material';
 import Search from '@mui/icons-material/Search';
 
@@ -15,6 +15,7 @@ function Clients() {
 
 	const [showDialog, setShowDialog] = useState(false);
 	const [refetchCounter, setRefetchCounter] = useState(0);
+	const [searchValue, setSearchValue] = useState('');
 
 	const handleCloseDialog = (refetch?: boolean) => {
 		if (refetch) {
@@ -23,6 +24,20 @@ function Clients() {
 
 		setShowDialog(false);
 	};
+
+	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchValue(event.target.value);
+	};
+
+	const filteredClients = useMemo(
+		() =>
+			clients.filter(
+				(i) =>
+					i.firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
+					i.lastName.toLowerCase().includes(searchValue.toLowerCase())
+			),
+		[clients, searchValue]
+	);
 
 	useEffect(() => {
 		getClients().then((clients) => dispatch({ type: 'FETCH_ALL_CLIENTS', data: clients }));
@@ -41,6 +56,8 @@ function Clients() {
 									</InputAdornment>
 								}
 								placeholder='Search clients...'
+								onChange={handleSearch}
+								value={searchValue}
 							/>
 						</Grid>
 						<Grid item>
@@ -51,7 +68,7 @@ function Clients() {
 					</Grid>
 				</Grid>
 				<Grid item>
-					<ClientTable clients={clients} />
+					<ClientTable clients={filteredClients} totalClients={clients.length} />
 				</Grid>
 			</Grid>
 			{showDialog && <ClientDialog open onClose={handleCloseDialog} />}
