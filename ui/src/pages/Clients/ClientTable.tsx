@@ -9,7 +9,7 @@ type Props = {
 
 const DEFAULT_PAGINATION = {
 	page: 0,
-	rowsPerPage: 1,
+	rowsPerPage: 5,
 };
 
 const ClientTable: React.FC<Props> = ({ clients }) => {
@@ -48,7 +48,7 @@ const ClientTable: React.FC<Props> = ({ clients }) => {
 				{...pagination}
 				component='div'
 				count={clients.length}
-				rowsPerPageOptions={[1, 2, 3]}
+				rowsPerPageOptions={[5, 10, 50]}
 				onPageChange={(_, page) => setPagination({ ...pagination, page })}
 				onRowsPerPageChange={(e) =>
 					setPagination({ page: DEFAULT_PAGINATION.page, rowsPerPage: +e.target.value })
