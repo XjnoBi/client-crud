@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material'
+import { alpha, createTheme } from '@mui/material'
 
 import {colors} from 'utils/colors'
 
@@ -40,14 +40,39 @@ const theme = createTheme({
                 }
             }
         },
+        MuiInputLabel: {
+            defaultProps: {
+                disableAnimation: true
+            },
+            styleOverrides: {
+                root: {
+                    color: colors.gray,
+                    fontSize: '14px',
+                    transform: 'none',
+                    transition: 'none',
+                }
+            }
+        },
+        MuiInputBase: {
+            styleOverrides: {
+                root: {
+                    'label + &': {
+                        marginTop: '2rem'
+                    }
+                }
+            }
+        },
         MuiOutlinedInput: {
             styleOverrides: {
                 root: {
-                    borderColor: colors.gray3,
-                    borderRadius: '8px',
-                    ':hover': {
-                        borderColor: colors.gray2,
-                    }
+                    backgroundColor: colors.white,
+                    borderColor: colors.gray,
+                    borderRadius: '4px',
+                    transition: 'none',
+                    '&:focus': {
+                        boxShadow: `${alpha(colors.blue, 0.25)} 0 0 0 0.2rem`,
+                        borderColor: colors.blue,
+                    },
                 },
                 input: {
                     padding: '14px'
@@ -58,10 +83,20 @@ const theme = createTheme({
             styleOverrides: {
                 root: {
                     color: colors.gray,
+                    '&.Mui-completed': {
+                        color: colors.green,    
+                    }
                 },
-                completed: {
-                    color: colors.green,
-                },
+            }
+        },
+        MuiStepLabel: {
+            styleOverrides: {
+                label: {
+                    fontWeight: 'bold',
+                    '&.Mui-active': {
+                        fontWeight: 'bold',
+                    }
+                }
             }
         },
         MuiTable: {

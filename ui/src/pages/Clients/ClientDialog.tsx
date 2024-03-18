@@ -9,10 +9,12 @@ import {
 	Step,
 	StepLabel,
 	Stepper,
-	TextField,
 } from '@mui/material';
 import { Formik } from 'formik';
 import { ArrowBack } from '@mui/icons-material';
+
+import TextInput from 'components/TextInput';
+
 import { createClient } from '../../services/api';
 
 type Props = {
@@ -48,9 +50,10 @@ const ClientDialog: React.FC<Props> = ({ client, open = false, onClose }) => {
 			{({ handleBlur, handleChange, handleSubmit, submitForm, values }) => {
 				const fieldProps = (name: keyof IClient) => ({
 					fullWidth: true,
+					name,
 					onBlur: handleBlur,
 					onChange: handleChange,
-					name,
+					required: true,
 					value: values[name],
 				});
 				const getFormFields = () => {
@@ -59,10 +62,10 @@ const ClientDialog: React.FC<Props> = ({ client, open = false, onClose }) => {
 							return (
 								<React.Fragment>
 									<Grid item>
-										<TextField {...fieldProps('firstName')} label='First name' />
+										<TextInput {...fieldProps('firstName')} label='First name' />
 									</Grid>
 									<Grid item>
-										<TextField {...fieldProps('lastName')} label='Last name' />
+										<TextInput {...fieldProps('lastName')} label='Last name' />
 									</Grid>
 								</React.Fragment>
 							);
@@ -70,10 +73,10 @@ const ClientDialog: React.FC<Props> = ({ client, open = false, onClose }) => {
 							return (
 								<React.Fragment>
 									<Grid item>
-										<TextField {...fieldProps('email')} label='Email' />
+										<TextInput {...fieldProps('email')} label='Email' />
 									</Grid>
 									<Grid item>
-										<TextField {...fieldProps('phoneNumber')} label='Phone number' />
+										<TextInput {...fieldProps('phoneNumber')} label='Phone number' />
 									</Grid>
 								</React.Fragment>
 							);

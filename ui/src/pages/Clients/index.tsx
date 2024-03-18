@@ -1,9 +1,12 @@
 import { memo, useContext, useEffect, useState } from 'react';
-import { Button, Grid, TextField } from '@mui/material';
-import { StateContext } from '../../store/DataProvider';
-import Page from '../../components/Page';
-import ClientTable from './ClientTable';
+import { Button, Grid, InputAdornment, OutlinedInput } from '@mui/material';
+import Search from '@mui/icons-material/Search';
+
+import Page from 'components/Page';
+
 import { getClients } from '../../services/api';
+import { StateContext } from '../../store/DataProvider';
+import ClientTable from './ClientTable';
 import ClientDialog from './ClientDialog';
 
 function Clients() {
@@ -31,7 +34,14 @@ function Clients() {
 				<Grid item>
 					<Grid container alignItems='center' justifyContent='space-between'>
 						<Grid item>
-							<TextField placeholder='Search clients...' />
+							<OutlinedInput
+								endAdornment={
+									<InputAdornment position='end'>
+										<Search />
+									</InputAdornment>
+								}
+								placeholder='Search clients...'
+							/>
 						</Grid>
 						<Grid item>
 							<Button variant='contained' onClick={() => setShowDialog(true)}>
