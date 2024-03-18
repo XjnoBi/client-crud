@@ -10,8 +10,9 @@ import {
 	StepLabel,
 	Stepper,
 } from '@mui/material';
-import { Formik } from 'formik';
 import { ArrowBack } from '@mui/icons-material';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import TextInput from 'components/TextInput';
 
@@ -31,6 +32,13 @@ const EMPTY_FORM: IClient = {
 	phoneNumber: '',
 };
 
+const VALIDATION_SCHEMA = Yup.object({
+	email: Yup.string().email('Invalid email').ensure().required('Email is required'),
+	firstName: Yup.string().ensure().required('First name is required'),
+	lastName: Yup.string().ensure().required('Last name is required'),
+	phoneNumber: Yup.string().ensure().required('Phone number is required'),
+});
+
 const STEPS = ['Personal details', 'Contact details'];
 
 const ClientDialog: React.FC<Props> = ({ client, open = false, onClose }) => {
@@ -46,9 +54,24 @@ const ClientDialog: React.FC<Props> = ({ client, open = false, onClose }) => {
 	};
 
 	return (
-		<Formik initialValues={client || EMPTY_FORM} onSubmit={onSubmit}>
-			{({ handleBlur, handleChange, handleSubmit, submitForm, values }) => {
+		<Formik initialValues={client || EMPTY_FORM} onSubmit={onSubmit} validationSchema={VALIDATION_SCHEMA}>
+			{({
+				dirty,
+				errors,
+				handleBlur,
+				handleChange,
+				handleSubmit,
+				setFieldError,
+				setFieldTouched,
+				submitForm,
+				touched,
+				validateForm,
+				values,
+			}) => {
+				const hasError = (name: keyof IClient) => Boolean(errors[name] && touched[name]);
 				const fieldProps = (name: keyof IClient) => ({
+					error: hasError(name),
+					helperText: hasError(name) ? errors[name] : undefined,
 					fullWidth: true,
 					name,
 					onBlur: handleBlur,
@@ -86,7 +109,11 @@ const ClientDialog: React.FC<Props> = ({ client, open = false, onClose }) => {
 					switch (activeStep) {
 						case 0:
 							return (
-								<Button variant='contained' onClick={() => setActiveStep(1)}>
+								<Button
+									disabled={Boolean(errors['firstName'] || errors['lastName'])}
+									variant='contained'
+									onClick={handleClickContinue}
+								>
 									Continue
 								</Button>
 							);
@@ -103,12 +130,30 @@ const ClientDialog: React.FC<Props> = ({ client, open = false, onClose }) => {
 										</Button>
 									</Grid>
 									<Grid item>
-										<Button variant='contained' onClick={() => submitForm()}>
+										<Button disabled={!dirty} variant='contained' onClick={() => submitForm()}>
 											Create client
 										</Button>
 									</Grid>
 								</Grid>
 							);
+					}
+				};
+
+				const handleClickContinue = async () => {
+					const validationError = await validateForm(values);
+					if (!validationError.firstName && !validationError.lastName) {
+						setActiveStep(1);
+						return;
+					}
+
+					if (validationError.firstName) {
+						setFieldError('firstName', validationError.firstName);
+						setFieldTouched('firstName');
+					}
+
+					if (validationError.lastName) {
+						setFieldError('lastName', validationError.lastName);
+						setFieldTouched('lastName');
 					}
 				};
 

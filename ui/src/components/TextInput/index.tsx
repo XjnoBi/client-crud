@@ -1,12 +1,21 @@
 import React from 'react';
 import { alpha, styled } from '@mui/material/styles';
-import { FormControl, FormControlProps, InputBase, InputBaseProps, InputLabel, InputLabelProps } from '@mui/material';
+import {
+	FormControl,
+	FormControlProps,
+	FormHelperText,
+	InputBase,
+	InputBaseProps,
+	InputLabel,
+	InputLabelProps,
+} from '@mui/material';
 import { colors } from 'utils/colors';
 
 type Props = InputBaseProps &
 	InputLabelProps &
 	FormControlProps & {
 		label?: string;
+		helperText?: string;
 	};
 
 const BaseInput = styled(InputBase)(({ theme }) => ({
@@ -30,12 +39,13 @@ const BaseInput = styled(InputBase)(({ theme }) => ({
 	},
 }));
 
-const TextInput: React.FC<Props> = ({ label, margin, ...props }) => (
+const TextInput: React.FC<Props> = ({ helperText, label, margin, ...props }) => (
 	<FormControl variant='standard' {...props}>
 		<InputLabel shrink htmlFor={props.id}>
 			{label}
 		</InputLabel>
 		<BaseInput {...props} />
+		{helperText && <FormHelperText>{helperText}</FormHelperText>}
 	</FormControl>
 );
 
