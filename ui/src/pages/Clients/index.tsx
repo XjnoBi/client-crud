@@ -1,5 +1,5 @@
 import { memo, useContext, useEffect, useState } from 'react';
-import { Button, Grid, Paper, TextField, Typography } from '@mui/material';
+import { Button, Grid, TextField } from '@mui/material';
 import { StateContext } from '../../store/DataProvider';
 import Page from '../../components/Page';
 import ClientTable from './ClientTable';
@@ -26,23 +26,24 @@ function Clients() {
 	}, [dispatch, refetchCounter]);
 
 	return (
-		<Page>
-			<Typography variant='h4' sx={{ textAlign: 'start' }}>
-				Clients
-			</Typography>
-			<Grid container alignItems='center' justifyContent='space-between'>
+		<Page title='Clients'>
+			<Grid container direction='column' gap='1rem'>
 				<Grid item>
-					<TextField placeholder='Search client...' />
+					<Grid container alignItems='center' justifyContent='space-between'>
+						<Grid item>
+							<TextField placeholder='Search clients...' />
+						</Grid>
+						<Grid item>
+							<Button variant='contained' onClick={() => setShowDialog(true)}>
+								Create new client
+							</Button>
+						</Grid>
+					</Grid>
 				</Grid>
 				<Grid item>
-					<Button variant='contained' onClick={() => setShowDialog(true)}>
-						Create new client
-					</Button>
+					<ClientTable clients={clients} />
 				</Grid>
 			</Grid>
-			<Paper sx={{ margin: 'auto', marginTop: 3 }}>
-				<ClientTable clients={clients} />
-			</Paper>
 			{showDialog && <ClientDialog open onClose={handleCloseDialog} />}
 		</Page>
 	);

@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-	Paper,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	TablePagination,
-} from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow, TablePagination } from '@mui/material';
 
 import ClientRow from './ClientRow';
 
@@ -31,30 +22,28 @@ const ClientTable: React.FC<Props> = ({ clients }) => {
 
 	return (
 		<>
-			<TableContainer component={Paper} sx={{ maxWidth: '100%' }}>
-				<Table sx={{ minWidth: 400 }} aria-label='simple table'>
-					<TableHead>
-						<TableRow>
-							<TableCell>Name</TableCell>
-							<TableCell>Phone number</TableCell>
-							<TableCell>Email</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{data.map((client) => (
-							<ClientRow key={client.id} client={client} />
+			<Table sx={{ minWidth: 400 }} aria-label='simple table'>
+				<TableHead>
+					<TableRow>
+						<TableCell>Name</TableCell>
+						<TableCell>Phone number</TableCell>
+						<TableCell>Email</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{data.map((client) => (
+						<ClientRow key={client.id} client={client} />
+					))}
+					{!clients ||
+						(!clients && (
+							<TableRow sx={{ padding: 3 }}>
+								<TableCell component='th' scope='row'>
+									No clients
+								</TableCell>
+							</TableRow>
 						))}
-						{!clients ||
-							(!clients && (
-								<TableRow sx={{ padding: 3 }}>
-									<TableCell component='th' scope='row'>
-										No clients
-									</TableCell>
-								</TableRow>
-							))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+				</TableBody>
+			</Table>
 			<TablePagination
 				{...pagination}
 				component='div'

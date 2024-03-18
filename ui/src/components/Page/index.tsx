@@ -1,9 +1,25 @@
-import React from "react";
+import { Container, Typography } from '@mui/material';
+import React from 'react';
 
-export default function Page({ children }: { children?: React.ReactNode }) {
-  return (
-    <div style={{ margin: "auto", marginTop: 24, maxWidth: "700px" }}>
-      {children}
-    </div>
-  );
-}
+type Props = {
+	children: React.ReactNode;
+	title?: string;
+};
+
+const Page: React.FC<Props> = ({ children, title }) => (
+	<Container
+		maxWidth='md'
+		sx={{
+			marginTop: '4rem',
+		}}
+	>
+		{title && (
+			<Typography variant='h4' sx={{ textAlign: 'start' }}>
+				{title}
+			</Typography>
+		)}
+		{children}
+	</Container>
+);
+
+export default Page;
